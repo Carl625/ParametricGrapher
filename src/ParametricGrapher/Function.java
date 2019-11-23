@@ -1554,7 +1554,7 @@ public class Function {
             zeroes.add(zero);
         }
 
-        double[] distinctZeroes = zeroes.stream().mapToDouble(z -> ((Math.round(z * Math.pow(10, 6))) / Math.pow(10, 6))).distinct().toArray();
+        double[] distinctZeroes = zeroes.stream().mapToDouble(z -> ((Math.round(z * Math.pow(10, 6))) / Math.pow(10, 6))).distinct().toArray(); // 6 decimal precision
 
         return distinctZeroes;
     }

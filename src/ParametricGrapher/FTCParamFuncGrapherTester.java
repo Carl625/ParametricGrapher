@@ -67,8 +67,8 @@ public class FTCParamFuncGrapherTester extends FTCParametricFunctionGrapher {
 //		Function cosine = new Function("(4 * (cos(x)))", "x", new HashMap<String, Double>());
 //		ParametricFunction2D circle = new ParametricFunction2D(sine, cosine, false);
 		
-		Function parabola = new Function("(sin(x))", "x", new HashMap<String, Double>());
-		ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, false);
+		Function parabola = new Function("(5)", "x", new HashMap<String, Double>());
+		ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, true);
 		
 		Function derivative1 = Function.constSimplify(Function.derivative(parabola));
 		//System.out.println(derivative1);
