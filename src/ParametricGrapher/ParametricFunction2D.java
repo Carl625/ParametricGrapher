@@ -343,11 +343,13 @@ public class ParametricFunction2D {
 
         Function dx_dt = Function.constSimplify(Function.derivative(x));
         Function dy_dt = Function.constSimplify(Function.derivative(y));
+        System.out.println("dx/dt: " + dx_dt);
+        System.out.println("dy/dt: " + dy_dt);
 
         double[] horizontalZeroes = dx_dt.getZeroesNewton(domain);
         double[] verticalZeroes = dy_dt.getZeroesNewton(domain);
-//        System.out.println("Horizontal Zeroes: " + Arrays.toString(horizontalZeroes));
-//        System.out.println("Vertical Zeroes: " + Arrays.toString(verticalZeroes));
+        System.out.println("Horizontal Zeroes: " + Arrays.toString(horizontalZeroes));
+        System.out.println("Vertical Zeroes: " + Arrays.toString(verticalZeroes));
 
         // find max and mins
         if (horizontalZeroes.length != 0 && verticalZeroes.length != 0) { // this fails with freshly parametrized functions

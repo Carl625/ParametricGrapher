@@ -67,8 +67,8 @@ public class FTCParamFuncGrapherTester extends FTCParametricFunctionGrapher {
 //		Function cosine = new Function("(4 * (cos(x)))", "x", new HashMap<String, Double>());
 //		ParametricFunction2D circle = new ParametricFunction2D(sine, cosine, false);
 		
-		Function parabola = new Function("(5)", "x", new HashMap<String, Double>());
-		ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, true);
+		Function parabola = new Function("(((sgn(t)) * (((t ^ 2.0) + ((t + 2.0) ^ 2.0)) ^ 0.5)) * (cos(atan((t + 2.0) / t))))", "t", new HashMap<String, Double>());
+		ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, false);
 		
 		Function derivative1 = Function.constSimplify(Function.derivative(parabola));
 		//System.out.println(derivative1);
@@ -77,11 +77,11 @@ public class FTCParamFuncGrapherTester extends FTCParametricFunctionGrapher {
 		ParametricFunction2D rotatedPP = ParametricFunction2D.rotate(parabolaParametric, Math.toRadians(90));
 		//ParametricFunction2D regeneratedParabolaParametric = new ParametricFunction2D(rotatedPP.getPolarComponents().get1(), rotatedPP.getPolarComponents().get2(), true);
 		
-		FTCParamFuncGrapherTester g = new FTCParamFuncGrapherTester(parabolaParametric, new Pair<Coordinate, Coordinate>(new Coordinate(-10, -10), new Coordinate(10, 10)), -(Math.PI * 2), Math.PI / 10000, Math.PI * 4, false);
-		g.drawGraph(0, 0, 2000, 2000);
+		FTCParamFuncGrapherTester g = new FTCParamFuncGrapherTester(parabolaParametric, new Pair<Coordinate, Coordinate>(new Coordinate(-10, -10), new Coordinate(10, 10)), -20, Math.PI / 100, 32, false);
+		g.drawGraph(0, 0, 800, 800);
 		//System.out.println(parabola);
-		System.out.println(Arrays.toString(parabolaParametric.approximateBounds(new double[] {(-Math.PI * 2), (Math.PI * 2)}, 0.01)));
-		System.out.println(Arrays.toString(parabolaParametric.findBounds(new double[] {(-Math.PI * 2), (Math.PI * 2)})));
+		System.out.println(Arrays.toString(parabolaParametric.approximateBounds(new double[] {-20, 12}, 0.01)));
+		System.out.println(Arrays.toString(parabolaParametric.findBounds(new double[] {-20, 12})));
 //		FTCParamFuncGrapherTester h = new FTCParamFuncGrapherTester(derivParametric, new Pair<Coordinate, Coordinate>(new Coordinate(-20, -20), new Coordinate(20, 20)), -10, 0.001, 20.0, false);
 //		h.drawGraph(0,  0, 2000, 2000);
 	}

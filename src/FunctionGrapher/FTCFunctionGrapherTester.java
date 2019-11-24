@@ -47,7 +47,7 @@ public class FTCFunctionGrapherTester extends FTCFunctionGrapher {
 		TFVariables.put("JETHANIEL", 881.233);
 		TFVariables.put("JETHANY", 12.0);
 		TFVariables.put("ELIZAJETH", 2.0);
-		Function testFunction = new Function("(((JETHANIEL + LIFE_AND_JEATH) + ((JETHANY ^ ELIZAJETH) ^ LIFE_AND_JEATH)) + JETH)", "LIFE_AND_JEATH", TFVariables);
+		Function testFunction = new Function("(((JETHANIEL + LIFE_AND_JETH) + ((JETHANY ^ ELIZAJETH) ^ LIFE_AND_JETH)) + JETH)", "LIFE_AND_JETH", TFVariables);
 		
 		Function testFunc2 = new Function("(x ^ 2)", "x", new HashMap<String, Double>());
 		
@@ -59,7 +59,7 @@ public class FTCFunctionGrapherTester extends FTCFunctionGrapher {
 		Function naturalLog = new Function("(tanh(3 * x))", "x", new HashMap<String, Double>());
 		Function cardiod = new Function("(1 + (sin(x)))", "x", new HashMap<String, Double>());
 		
-		FTCFunctionGrapherTester g = new FTCFunctionGrapherTester(testFunc2, new Coordinate(-5, -5), 0.01, 10.0, 10.0);
-		g.drawGraph(0, 0, 2000, 2000);
+		FTCFunctionGrapherTester g = new FTCFunctionGrapherTester(testFunction, new Coordinate(-5, 945), 0.01, 10.0, 10.0);
+		g.drawGraph(0, 0, 800, 800);
 	}
 }
