@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static java.lang.Double.NaN;
+
 public class ParametricFunction2D {
 
     private Pair<Function, Function> polarComponents;
@@ -340,92 +342,74 @@ public class ParametricFunction2D {
 
         Function x = rectangularComponents.get1();
         Function y = rectangularComponents.get2();
+//        System.out.println("x Func: " + x);
+//        System.out.println("y Func: " + y);
 
         Function dx_dt = Function.constSimplify(Function.derivative(x));
         Function dy_dt = Function.constSimplify(Function.derivative(y));
+//        System.out.println("x Derivative: " + dx_dt);
+//        System.out.println("y Derivative: " + dy_dt);
+
+        Function d2x_dt2 = Function.constSimplify(Function.derivative(dx_dt));
+        Function d2y_dt2 = Function.constSimplify(Function.derivative(dy_dt));
+//        System.out.println("x 2nd Derivative: " + d2x_dt2);
+//        System.out.println("y 2nd Derivative: " + d2y_dt2);
 
         double[] horizontalZeroes = dx_dt.getZeroesNewton(domain);
         double[] verticalZeroes = dy_dt.getZeroesNewton(domain);
 //        System.out.println("Horizontal Zeroes: " + Arrays.toString(horizontalZeroes));
 //        System.out.println("Vertical Zeroes: " + Arrays.toString(verticalZeroes));
 
-        // find max and mins
-        if (horizontalZeroes.length != 0 && verticalZeroes.length != 0) { // this fails with freshly parametrized functions
+        // find max maximums and min minimums and mins
 
-            double xMax = horizontalZeroes[0];
-            double xMin = horizontalZeroes[0];
+        double horzMax = x.output(domain[1]);
+        double horzMin = x.output(domain[0]);
+        double vertMax = y.output(domain[1]);
+        double vertMin = y.output(domain[0]);
 
-            for (int hz = 1; hz < horizontalZeroes.length; hz++) {
+        if (horizontalZeroes.length > 0) {
+            //System.out.println(Arrays.toString(horizontalZeroes));
+            double horizontalMax = Arrays.stream(horizontalZeroes).filter(d -> (d2x_dt2.output(d) < 0)).max().orElse(NaN);
+            double horizontalMin = Arrays.stream(horizontalZeroes).filter(d -> (d2x_dt2.output(d) > 0)).min().orElse(NaN);
+            //System.out.println("Horizontal Zero Max: " + horizontalMax + " Horizontal Zero Min: " + horizontalMin);
 
-                if (x.output(horizontalZeroes[hz]) > x.output(xMax)) {
+            if (!Double.isNaN(horizontalMax) && !Double.isNaN(horizontalMin)) {
+                if (horzMax < x.output(horizontalMax)) {
 
-                    xMax = horizontalZeroes[hz];
+                    horzMax = x.output(horizontalMax);
                 }
 
-                if (x.output(horizontalZeroes[hz]) < x.output(xMin)) {
+                if (horzMin > x.output(horizontalMin)) {
 
-                    xMin = horizontalZeroes[hz];
-                }
-            }
-
-            double yMax = verticalZeroes[0];
-            double yMin = verticalZeroes[0];
-
-            for (int vz = 1; vz < verticalZeroes.length; vz++) {
-
-                if (y.output(verticalZeroes[vz]) > y.output(yMax)) {
-
-                    yMax = verticalZeroes[vz];
-                }
-
-                if (y.output(verticalZeroes[vz]) < y.output(yMin)) {
-
-                    yMin = verticalZeroes[vz];
+                    horzMin = x.output(horizontalMin);
                 }
             }
-
-            return (new double[] {x.output(xMin), y.output(yMin), x.output(xMax), y.output(yMax)});
-        } else if (horizontalZeroes.length == 0 && verticalZeroes.length != 0) {
-
-            double yMax = verticalZeroes[0];
-            double yMin = verticalZeroes[0];
-
-            for (int vz = 1; vz < verticalZeroes.length; vz++) {
-
-                if (y.output(verticalZeroes[vz]) > y.output(yMax)) {
-
-                    yMax = verticalZeroes[vz];
-                }
-
-                if (y.output(verticalZeroes[vz]) < y.output(yMin)) {
-
-                    yMin = verticalZeroes[vz];
-                }
-            }
-
-            return (new double[] {x.output(domain[0]), y.output(yMin), x.output(domain[1]), y.output(yMax)});
-        } else if (horizontalZeroes.length != 0) {
-
-            double xMax = horizontalZeroes[0];
-            double xMin = horizontalZeroes[0];
-
-            for (int hz = 1; hz < horizontalZeroes.length; hz++) {
-
-                if (x.output(horizontalZeroes[hz]) > x.output(xMax)) {
-
-                    xMax = horizontalZeroes[hz];
-                }
-
-                if (x.output(horizontalZeroes[hz]) < x.output(xMin)) {
-
-                    xMin = horizontalZeroes[hz];
-                }
-            }
-
-            return (new double[] {x.output(xMin), y.output(domain[0]), x.output(xMax), y.output(domain[1])});
         } else {
-            return null;
+            //System.out.println("Horizontal Zero Max: " + horzMax + " Horizontal Zero Min: " + horzMin);
         }
+
+        if (verticalZeroes.length > 0) {
+            //System.out.println(Arrays.toString(verticalZeroes));
+            double verticalMax = Arrays.stream(verticalZeroes).filter(d -> (d2y_dt2.output(d) < 0)).max().orElse(NaN);
+            double verticalMin = Arrays.stream(verticalZeroes).filter(d -> (d2y_dt2.output(d) > 0)).min().orElse(NaN);
+            //System.out.println("Vertical Zero Max: " + verticalMax + " Vertical Zero Min: " + verticalMin);
+
+            if (!Double.isNaN(verticalMax) && !Double.isNaN(verticalMin)) {
+                if (vertMax < y.output(verticalMax)) {
+
+                    vertMax = y.output(verticalMax);
+                }
+
+                if (vertMin > y.output(verticalMin)) {
+
+                    vertMin = y.output(verticalMin);
+                }
+            }
+        } else {
+            //System.out.println("Vertical Zero Max: " + vertMax + " Vertical Zero Min: " + vertMin);
+        }
+
+        return (new double[] {horzMin, vertMin, horzMax, vertMax});
     }
 
     public double[] approximateBounds(double[] domain, double resolution) {
@@ -487,11 +471,18 @@ public class ParametricFunction2D {
 
     public static void main(String[] args) {
 
-        Function parabola = new Function("(((((x ^ 5) + (3 * (x ^ 4))) + (3 * (x ^ 2))) + (2 * x)) - 10)", "x", new HashMap<String, Double>());
-        //ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, false);
-        Function sinusoid = new Function("(sin(x))", "x", new HashMap<String, Double>());
+//        Function parabola = new Function("(((((x ^ 5) + (3 * (x ^ 4))) + (3 * (x ^ 2))) + (2 * x)) - 10)", "x", new HashMap<String, Double>());
+//        //ParametricFunction2D parabolaParametric = new ParametricFunction2D(parabola, false);
+//        Function sinusoid = new Function("(sin(x))", "x", new HashMap<String, Double>());
+//
+//        System.out.println("polynomail Zeroes: " + Arrays.toString(parabola.getZeroesNewton(new double[] {-4, 4})));
+//        System.out.println("sin(x) zeroes: " + Arrays.toString(sinusoid.getZeroesNewton(new double[] {-(Math.PI * 2), (Math.PI * 2)})));
 
-        System.out.println("polynomail Zeroes: " + Arrays.toString(parabola.getZeroesNewton(new double[] {-4, 4})));
-        System.out.println("sin(x) zeroes: " + Arrays.toString(sinusoid.getZeroesNewton(new double[] {-(Math.PI * 2), (Math.PI * 2)})));
+        Function parabola = new Function("(x ^ 2)", "x", new HashMap<String, Double>());
+        ParametricFunction2D rotatedPP = new ParametricFunction2D(parabola, false);
+        rotatedPP = ParametricFunction2D.rotate(rotatedPP, (Math.PI / 2.0));
+
+        System.out.println(Arrays.toString(rotatedPP.findBounds(new double[] {0, 4})));
+
     }
 }
